@@ -1,28 +1,41 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
-  const [message, setMessage] = useState('');
+  const [accountInsights, setAccountInsights] = useState([]);
 
   useEffect(() => {
-    axios
-      .get('/api')
-      .then((response) => {
-        setMessage(response.data[0].message);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const fetchData = async () => {
+      const result = await axios('/api/account-insights');
+      setAccountInsights(result.data);
+    };
+    fetchData();
   }, []);
 
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>{message}</p>
+        <h1 className="App-title">Account Insights</h1>
       </header>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Impressions</th>
+            <th>Clicks</th>
+          </tr>
+        </thead>
+        <tbody>
+          {accountInsights.map((account, index) => (
+            <tr key={index}>
+              <td>{account.account_name}</td>
+              <td>{account.impressions}</td>
+              <td>{account.clicks}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
