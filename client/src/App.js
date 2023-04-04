@@ -1,42 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Accounts from './screens/Accounts';
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
+import { LinkContainer } from 'react-router-bootstrap';
 
 function App() {
-  const [accountInsights, setAccountInsights] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios('/api/account-insights');
-      setAccountInsights(result.data);
-    };
-    fetchData();
-  }, []);
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1 className="App-title">Account Insights</h1>
-      </header>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Impressions</th>
-            <th>Clicks</th>
-          </tr>
-        </thead>
-        <tbody>
-          {accountInsights.map((account, index) => (
-            <tr key={index}>
-              <td>{account.account_name}</td>
-              <td>{account.impressions}</td>
-              <td>{account.clicks}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <BrowserRouter>
+      <div className="d-flex flex-column site-container">
+        <header>
+          <Navbar bg="dark" variant="dark">
+            <Container>
+              <LinkContainer to="/">
+                <Navbar.Brand>GIM</Navbar.Brand>
+              </LinkContainer>
+            </Container>
+          </Navbar>
+        </header>
+        <main>
+          <Container>
+            <Routes>
+              <Route path="/" element={<Accounts />} />
+            </Routes>
+          </Container>
+        </main>
+        <footer>
+          <div className="text-center">All rights reserved</div>
+        </footer>
+      </div>
+    </BrowserRouter>
   );
 }
 
