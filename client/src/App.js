@@ -1,34 +1,26 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Accounts from './screens/Accounts';
-import Navbar from 'react-bootstrap/Navbar';
-import Container from 'react-bootstrap/Container';
-import { LinkContainer } from 'react-router-bootstrap';
+import './App.css';
+import Sidebar from './components/Sidebar/Sidebar';
+import MainDashboard from './components/MainDashboard/MainDashboard';
+// import RightSide from './components/RigtSide/RightSide';
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="d-flex flex-column site-container">
-        <header>
-          <Navbar bg="dark" variant="dark">
-            <Container>
-              <LinkContainer to="/">
-                <Navbar.Brand>GIM</Navbar.Brand>
-              </LinkContainer>
-            </Container>
-          </Navbar>
-        </header>
-        <main>
-          <Container>
-            <Routes>
-              <Route path="/" element={<Accounts />} />
-            </Routes>
-          </Container>
-        </main>
-        <footer>
-          <div className="text-center">All rights reserved</div>
-        </footer>
+    // <BrowserRouter>
+    //   <main>
+    //     <Container>
+    //       <Routes>
+    //         <Route path="/" element={<Accounts />} />
+    //       </Routes>
+    //     </Container>
+    //   </main>
+    // </BrowserRouter>
+    <div className="App">
+      <div className="AppGlass">
+        <Sidebar />
+        <MainDashboard />
+        {/* <RightSide /> */}
       </div>
-    </BrowserRouter>
+    </div>
   );
 }
 

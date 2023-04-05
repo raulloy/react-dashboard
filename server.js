@@ -2,17 +2,17 @@ import express from 'express';
 import config from './config.js';
 import { getAccountInsights, getCampaignInsights } from './api.js';
 import path from 'path';
-import Contact from './models/contactModel.js';
-import mongoose from 'mongoose';
+// import Contact from './models/contactModel.js';
+// import mongoose from 'mongoose';
 
-mongoose
-  .connect(config.MONGODB_URL)
-  .then(() => {
-    console.log('Connected to mongodb');
-  })
-  .catch((error) => {
-    console.log(error.reason);
-  });
+// mongoose
+//   .connect(config.MONGODB_URL)
+//   .then(() => {
+//     console.log('Connected to mongodb');
+//   })
+//   .catch((error) => {
+//     console.log(error.reason);
+//   });
 
 const app = express();
 const accessToken = config.FB_API_TOKEN;
@@ -144,22 +144,22 @@ app.get('/api/campaign-insights/:id', async (req, res) => {
   res.send(CampaignInsightsObj);
 });
 
-app.get('/api/contacts-by-time-range', async (req, res) => {
-  const { since, until } = req.query;
+// app.get('/api/contacts-by-time-range', async (req, res) => {
+//   const { since, until } = req.query;
 
-  try {
-    const contacts = await Contact.find({
-      'properties.hubspot_owner_assigneddate': {
-        $gte: new Date(since),
-        $lte: new Date(until),
-      },
-    });
+//   try {
+//     const contacts = await Contact.find({
+//       'properties.hubspot_owner_assigneddate': {
+//         $gte: new Date(since),
+//         $lte: new Date(until),
+//       },
+//     });
 
-    res.send(contacts);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+//     res.send(contacts);
+//   } catch (error) {
+//     res.status(500).send(error);
+//   }
+// });
 
 // Body Parser Middleware
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
