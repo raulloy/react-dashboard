@@ -1,6 +1,10 @@
 import express from 'express';
 import config from './config.js';
-import { getAccountInsights, getCampaignInsights } from './api.js';
+import {
+  getAccountInsights,
+  getAllAdSetsInsights,
+  getCampaignInsights,
+} from './api.js';
 import path from 'path';
 import Contact from './models/contactModel.js';
 import mongoose from 'mongoose';
@@ -142,6 +146,18 @@ app.get('/api/campaign-insights/:id', async (req, res) => {
   );
 
   res.send(CampaignInsightsObj);
+});
+
+app.get('/api/adsets-insights/:id', async (req, res) => {
+  const { since, until } = req.query;
+  const AccountInsights = await getAllAdSetsInsights(
+    accessToken,
+    req.params.id,
+    since,
+    until
+  );
+
+  res.send(AccountInsights.campaigns);
 });
 
 app.get('/api/contacts-by-time-range', async (req, res) => {

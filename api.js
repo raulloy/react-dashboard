@@ -45,13 +45,13 @@ export const getCampaignInsights = async (
 
 export const getAdSetsInsights = async (
   accessToken,
-  campaignID,
+  accountId,
   since = '2023-02-01',
   until = '2023-02-28'
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${campaignID}?fields=name,objective,adsets{name,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v15.0/${accountId}?fields=name,objective,adsets{name,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -63,6 +63,27 @@ export const getAdSetsInsights = async (
     return error;
   }
 };
+
+// export const getAdSetsInsights = async (
+//   accessToken,
+//   campaignID,
+//   since = '2023-02-01',
+//   until = '2023-02-28'
+// ) => {
+//   try {
+//     const response = await axios({
+//       url: `https://graph.facebook.com/v15.0/${campaignID}?fields=name,objective,adsets{name,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
+//       method: 'GET',
+//       mode: 'cors',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     return error;
+//   }
+// };
 
 export const getAdsInsights = async (
   accessToken,
@@ -114,7 +135,7 @@ export const getAllAdSetsInsights = async (
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${accountID}?fields=name,campaigns{name,status,objective,adsets{name,account_id,campaign_id,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}}&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v15.0/${accountID}?fields=name,campaigns{name,status,objective,adsets{name,account_id,campaign_id,campaign{name},status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}}&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {
