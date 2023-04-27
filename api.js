@@ -30,7 +30,7 @@ export const getCampaignInsights = async (
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${accountId}?fields=name,campaigns{name,status,objective,account_id,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v15.0/${accountId}?fields=name,campaigns.limit(50){name,status,objective,account_id,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -51,7 +51,7 @@ export const getAdSetsInsights = async (
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${accountId}?fields=name,objective,adsets{name,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v15.0/${accountId}?fields=name,objective,adsets.limit(50){name,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -93,7 +93,7 @@ export const getAdsInsights = async (
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${adSetID}?fields=name,ads{name,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v15.0/${adSetID}?fields=name,ads.limit(50){name,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -114,7 +114,7 @@ export const getAllAdsInsights = async (
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${accountID}?fields=name,ads{name,account_id,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v15.0/${accountID}?fields=name,ads.limit(50){name,account_id,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -135,7 +135,7 @@ export const getAllAdSetsInsights = async (
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${accountID}?fields=name,campaigns{name,status,objective,adsets{name,account_id,campaign_id,campaign{name},status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}}&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v15.0/${accountID}?fields=name,campaigns.limit(50){name,status,objective,adsets{name,account_id,campaign_id,campaign{name},status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}}&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -159,17 +159,6 @@ export const getContacts = async (limit, after) => {
         'Content-Type': 'application/json',
       },
       data: {
-        // filterGroups: [
-        //   {
-        //     filters: [
-        //       {
-        //         propertyName: 'email',
-        //         operator: 'EQ',
-        //         value: 'paula109@hotmail.com',
-        //       },
-        //     ],
-        //   },
-        // ],
         filterGroups: [
           {
             filters: [

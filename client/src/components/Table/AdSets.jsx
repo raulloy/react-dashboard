@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useState, useContext } from 'react';
 
+import { Modal, Button } from 'react-bootstrap';
+
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,15 +11,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-import { Modal, Button } from 'react-bootstrap';
-
 import { accounts } from '../../data/data';
 import { DateDropdown } from '../DatePickers/DateDropdown';
-import { CampaignsDataStoreContext } from '../../data/CampaignsDataStore';
+import { AdSetsDataStoreContext } from '../../data/AdSetsDataStore';
 import { statusStyle } from './utils';
 import './Table.css';
 
-export default function CampaignsTable() {
+export default function AdSetsTable() {
   const {
     since,
     setSince,
@@ -27,32 +27,42 @@ export default function CampaignsTable() {
     setSelectedAccount,
     campaignInsights,
     contacts,
-  } = useContext(CampaignsDataStoreContext);
+  } = useContext(AdSetsDataStoreContext);
 
-  const sortedCampaigns = campaignInsights.sort((a, b) => {
-    // Compare the "spend" properties of the two objects
-    const aSpend = parseFloat(a.insights ? a.insights.data[0].spend : 0);
-    const bSpend = parseFloat(b.insights ? b.insights.data[0].spend : 0);
-    if (aSpend > 0 && bSpend <= 0) {
-      return -1; // a comes first
-    } else if (aSpend <= 0 && bSpend > 0) {
-      return 1; // b comes first
-    }
-
-    return 0; // No changes to order
-  });
+  const adsetsData = campaignInsights
+    .map((element) => (element.adsets ? element.adsets.data : []))
+    .flat()
+    .sort((a, b) => {
+      if (
+        a.insights &&
+        a.insights.data &&
+        a.insights.data[0] &&
+        parseFloat(a.insights.data[0].spend) > 0
+      ) {
+        return -1;
+      } else if (
+        b.insights &&
+        b.insights.data &&
+        b.insights.data[0] &&
+        parseFloat(b.insights.data[0].spend) > 0
+      ) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 
   const contactsbyCampaign = contacts.map(({ id, properties }) => ({
     id,
     hs_analytics_first_url: properties.hs_analytics_first_url
-      ? properties.hs_analytics_first_url.match(/hsa_cam=(\d+)/)?.[1]
+      ? properties.hs_analytics_first_url.match(/hsa_grp=(\d+)/)?.[1]
       : null,
   }));
 
   // console.log('contactsbyCampaign', contactsbyCampaign);
 
   const contactCountsByCampaign = contactsbyCampaign.reduce((acc, contact) => {
-    const campaign = campaignInsights.find(
+    const campaign = adsetsData.find(
       (c) => c.id === contact.hs_analytics_first_url
     );
     const campaignId = campaign ? campaign.id : 'unknown';
@@ -78,7 +88,6 @@ export default function CampaignsTable() {
     setShow(true);
 
     if (matchingContact) {
-      // console.log(matchingContact);
       setContactsInfo(matchingContact);
     } else {
       console.log('No matching contact found.');
@@ -87,7 +96,7 @@ export default function CampaignsTable() {
 
   return (
     <div className="Table">
-      <h3>Campaign Insights</h3>
+      <h3>Ad Sets Insights</h3>
 
       <DateDropdown
         since={since}
@@ -112,11 +121,9 @@ export default function CampaignsTable() {
           <TableHead>
             <TableRow>
               <TableCell align="left">Campaña</TableCell>
-              <TableCell align="center">Objetivo</TableCell>
+              <TableCell align="left">Conjuntos de anuncios</TableCell>
               <TableCell align="left">Gastado</TableCell>
-              <TableCell align="left">Resultados</TableCell>
-              <TableCell align="left">Costo por resultados</TableCell>
-              <TableCell align="center">Estado</TableCell>
+              <TableCell align="left">Estado</TableCell>
               <TableCell align="left">Asignaciones</TableCell>
               <TableCell align="left">Alcance</TableCell>
               <TableCell align="left">Impresiones</TableCell>
@@ -126,112 +133,19 @@ export default function CampaignsTable() {
             </TableRow>
           </TableHead>
           <TableBody style={{ color: 'white' }}>
-            {sortedCampaigns.map((row) => (
+            {adsetsData.map((row) => (
               <TableRow
                 key={row.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  {row.campaign?.name}
                 </TableCell>
-                <TableCell align="center">{row.objective}</TableCell>
-                <TableCell align="center">
-                  $
-                  {parseFloat(
-                    row.insights ? row.insights.data[0].spend : 0
-                  ).toLocaleString('en-US')}
+                <TableCell component="th" scope="row">
+                  {row?.name}
                 </TableCell>
-                <TableCell align="center">
-                  {row.objective === 'MESSAGES' &&
-                  row.insights &&
-                  row.insights.data &&
-                  row.insights.data[0].actions
-                    ? (
-                        row.insights.data[0].actions.find(
-                          (element) =>
-                            element.action_type ===
-                            'onsite_conversion.messaging_conversation_started_7d'
-                        ) || {}
-                      ).value + ' Msgs'
-                    : row.objective === 'OUTCOME_ENGAGEMENT' &&
-                      row.insights &&
-                      row.insights.data &&
-                      row.insights.data[0].actions
-                    ? (
-                        row.insights.data[0].actions.find(
-                          (element) => element.action_type === 'like'
-                        ) || {}
-                      ).value + ' Likes'
-                    : (row.objective === 'OUTCOME_LEADS' ||
-                        row.objective === 'LEAD_GENERATION') &&
-                      row.insights &&
-                      row.insights.data &&
-                      row.insights.data[0].actions
-                    ? (
-                        row.insights.data[0].actions.find(
-                          (element) => element.action_type === 'lead'
-                        ) || {}
-                      ).value + ' Leads'
-                    : (row.objective === 'LINK_CLICKS' ||
-                        row.objective === 'OUTCOME_TRAFFIC') &&
-                      row.insights &&
-                      row.insights.data &&
-                      row.insights.data[0].actions
-                    ? (
-                        row.insights.data[0].actions.find(
-                          (element) => element.action_type === 'link_click'
-                        ) || {}
-                      ).value + ' Clicks'
-                    : 0}
-                </TableCell>
-                <TableCell align="center">
-                  $
-                  {(
-                    (row.insights ? row.insights.data[0].spend : 0) /
-                    parseFloat(
-                      row.objective === 'MESSAGES' &&
-                        row.insights &&
-                        row.insights.data &&
-                        row.insights.data[0].actions
-                        ? (
-                            row.insights.data[0].actions.find(
-                              (element) =>
-                                element.action_type ===
-                                'onsite_conversion.messaging_conversation_started_7d'
-                            ) || {}
-                          ).value
-                        : row.objective === 'OUTCOME_ENGAGEMENT' &&
-                          row.insights &&
-                          row.insights.data &&
-                          row.insights.data[0].actions
-                        ? (
-                            row.insights.data[0].actions.find(
-                              (element) => element.action_type === 'like'
-                            ) || {}
-                          ).value
-                        : (row.objective === 'OUTCOME_LEADS' ||
-                            row.objective === 'LEAD_GENERATION') &&
-                          row.insights &&
-                          row.insights.data &&
-                          row.insights.data[0].actions
-                        ? (
-                            row.insights.data[0].actions.find(
-                              (element) => element.action_type === 'lead'
-                            ) || {}
-                          ).value
-                        : (row.objective === 'LINK_CLICKS' ||
-                            row.objective === 'OUTCOME_TRAFFIC') &&
-                          row.insights &&
-                          row.insights.data &&
-                          row.insights.data[0].actions
-                        ? (
-                            row.insights.data[0].actions.find(
-                              (element) => element.action_type === 'link_click'
-                            ) || {}
-                          ).value
-                        : 1
-                    )
-                  ).toFixed(2)}
+                <TableCell align="left">
+                  ${row.insights ? row.insights.data[0].spend : 0}
                 </TableCell>
                 <TableCell align="left">
                   <span className="status" style={statusStyle(row.status)}>
@@ -334,3 +248,63 @@ export default function CampaignsTable() {
     </div>
   );
 }
+
+// const campaignInsights = [
+//   {
+//     name: 'Lomas de la Plata-Oro/IGStoriesCon/Leads/26-04-2023',
+//     account_id: '930432200705578',
+//     campaign_id: '23854211679280359',
+//     campaign: {
+//       name: 'Lomas de la Plata-Oro/IGStoriesCam/Leads/26-04-2023',
+//       id: '23854211679280359',
+//     },
+//     status: 'ACTIVE',
+//     id: '23854211679290359',
+//   },
+//   {
+//     name: 'Lomas de la Plata-General/FbCon/Leads/20-04-23',
+//     account_id: '930432200705578',
+//     campaign_id: '23854126524780359',
+//     campaign: {
+//       name: 'Lomas de la Plata-General/FbCam/Leads/20-04-23',
+//       id: '23854126524780359',
+//     },
+//     status: 'ACTIVE',
+//     insights: {
+//       data: [
+//         {
+//           reach: '53509',
+//           clicks: '534',
+//           impressions: '76121',
+//           spend: '2241.12',
+//           cpc: '4.196854',
+//           ctr: '0.701515',
+//         },
+//       ],
+//     },
+//     id: '23854126525510359',
+//   },
+//   {
+//     name: 'Lomas de la Plata- Platino/FBCon/Leads/RMK/01-03-23',
+//     account_id: '930432200705578',
+//     campaign_id: '23854112376210359',
+//     campaign: {
+//       name: 'Lomas de la Plata- Platino/FBCam/Leads/RMK/01-03-23',
+//       id: '23854112376210359',
+//     },
+//     status: 'ACTIVE',
+//     insights: {
+//       data: [
+//         {
+//           reach: '15200',
+//           clicks: '412',
+//           impressions: '19839',
+//           spend: '2289.83',
+//           cpc: '5.55784',
+//           ctr: '2.076718',
+//         },
+//       ],
+//     },
+//     id: '23854112398650359',
+//   },
+// ];

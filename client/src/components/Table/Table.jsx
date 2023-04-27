@@ -1,11 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import axios from 'axios';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import { useState, useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -13,12 +7,19 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import '../components/Table/Table.css';
+
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import { Modal, Button } from 'react-bootstrap';
 
-export default function AccountsTable() {
-  const [since, setSince] = useState('2023-03-01');
-  const [until, setUntil] = useState('2023-03-31');
+import { accountsData } from '../../data/facebook';
+import './Table.css';
+
+export default function BasicTable() {
+  const [since, setSince] = useState('2023-04-01');
+  const [until, setUntil] = useState('2023-04-15');
 
   const [accountInsights, setAccountInsights] = useState([]);
 
@@ -26,10 +27,9 @@ export default function AccountsTable() {
     const fetchData = async () => {
       try {
         // Fetch Account Insights
-        const accountsResponse = await axios.get(
-          `/api/account-insights?since=${since}&until=${until}`
-        );
-        setAccountInsights(accountsResponse.data);
+        const accountsResponse = await accountsData(since, until);
+
+        setAccountInsights(accountsResponse);
       } catch (err) {
         console.log(err);
       }
@@ -53,7 +53,7 @@ export default function AccountsTable() {
     <div className="Table">
       <h3>Account Insights</h3>
 
-      <Form>
+      <Form className="form-transparent">
         <Row>
           <Col sm={4} md={3} className="my-2">
             <InputGroup size="sm" className="mb-3">
@@ -62,6 +62,7 @@ export default function AccountsTable() {
                 type="date"
                 value={since}
                 onChange={(e) => setSince(e.target.value)}
+                className="input-transparent"
               />
             </InputGroup>
           </Col>
@@ -72,6 +73,7 @@ export default function AccountsTable() {
                 type="date"
                 value={until}
                 onChange={(e) => setUntil(e.target.value)}
+                className="input-transparent"
               />
             </InputGroup>
           </Col>
@@ -83,8 +85,9 @@ export default function AccountsTable() {
         style={{
           boxShadow: '0px 13px 20px 0px #80808029',
           overflow: 'auto',
+          backgroundColor: 'transparent',
         }}
-        sx={{ maxHeight: 500 }}
+        sx={{ maxHeight: 350 }}
       >
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -123,8 +126,11 @@ export default function AccountsTable() {
                 </TableCell>
                 <TableCell align="center" className="Details">
                   <Button
-                    variant="primary"
                     onClick={() => handleShow(element.account_id)}
+                    style={{
+                      backgroundColor: '#52b1ff',
+                      borderColor: 'transparent',
+                    }}
                   >
                     Details
                   </Button>
@@ -152,7 +158,9 @@ export default function AccountsTable() {
                 actions.map((action, index) => (
                   <tr key={index}>
                     <td>{action.action_type}</td>
-                    <td>{parseInt(action.value).toLocaleString('en-US')}</td>
+                    <td style={{ textAlign: 'center' }}>
+                      {parseInt(action.value).toLocaleString('en-US')}
+                    </td>
                   </tr>
                 ))
               ) : (

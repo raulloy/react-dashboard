@@ -184,3 +184,35 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 app.listen(config.PORT, () => {
   console.log(`Server is listening on port ${config.PORT}`);
 });
+
+// import { GoogleAdsApi } from 'google-ads-api';
+// import { enums } from 'google-ads-api';
+
+// const client = new GoogleAdsApi({
+//   client_id: process.env.CLIENT_ID,
+//   client_secret: process.env.CLIENT_SECRET,
+//   developer_token: process.env.DEVELOPER_TOKEN,
+// });
+
+// const customer = client.Customer({
+//   customer_id: '638-225-7794',
+//   refresh_token:
+//     '1//04hfSgaCd0bokCgYIARAAGAQSNwF-L9IrZXoQno8g6Q88MPVLCIyMyVXeccByNogVmOWE2I2fpFbigFjY9n_PPrW18HRZt9gSc70',
+// });
+
+// async function main() {
+//   const campaigns = await customer.report({
+//     entity: 'Leads_Search',
+//     attributes: ['campaign.id', 'campaign.name', 'campaign.status'],
+//     // constraints: {
+//     //   'campaign.status': enums.CampaignStatus.ENABLED,
+//     // },
+//   });
+
+//   console.log(campaigns);
+// }
+
+// main().catch((err) => {
+//   console.error(err);
+//   process.exitCode = 1;
+// });
