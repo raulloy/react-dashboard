@@ -55,7 +55,7 @@ export default function AccountsTable() {
             overflow: 'auto',
             backgroundColor: 'transparent',
           }}
-          sx={{ maxHeight: 350, maxWidth: 1150 }}
+          sx={{ maxHeight: 350 }}
         >
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -77,11 +77,7 @@ export default function AccountsTable() {
                   key={element.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}
-                  >
+                  <TableCell component="th" scope="row">
                     {element.account_name}
                   </TableCell>
                   <TableCell align="left">

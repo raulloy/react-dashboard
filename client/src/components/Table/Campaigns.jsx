@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useMemo } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -27,12 +27,14 @@ export default function CampaignsTable() {
     contacts,
   } = useContext(CampaignsDataStoreContext);
 
-  const grandTotalSpend = campaignInsights.reduce((total, campaign) => {
-    if (campaign.insights) {
-      return total + parseFloat(campaign.insights.data[0].spend);
-    }
-    return total;
-  }, 0);
+  const grandTotalSpend = useMemo(() => {
+    return campaignInsights.reduce((total, campaign) => {
+      if (campaign.insights) {
+        return total + parseFloat(campaign.insights.data[0].spend);
+      }
+      return total;
+    }, 0);
+  }, [campaignInsights]);
 
   const sortedCampaigns = campaignInsights.sort((a, b) => {
     // Compare the "spend" properties of the two objects
@@ -56,14 +58,16 @@ export default function CampaignsTable() {
 
   // console.log('contactsbyCampaign', contactsbyCampaign);
 
-  const contactCountsByCampaign = contactsbyCampaign.reduce((acc, contact) => {
-    const campaign = campaignInsights.find(
-      (c) => c.id === contact.hs_analytics_first_url
-    );
-    const campaignId = campaign ? campaign.id : 'unknown';
-    acc[campaignId] = (acc[campaignId] || 0) + 1;
-    return acc;
-  }, {});
+  const contactCountsByCampaign = useMemo(() => {
+    return contactsbyCampaign.reduce((acc, contact) => {
+      const campaign = campaignInsights.find(
+        (c) => c.id === contact.hs_analytics_first_url
+      );
+      const campaignId = campaign ? campaign.id : 'unknown';
+      acc[campaignId] = (acc[campaignId] || 0) + 1;
+      return acc;
+    }, {});
+  }, [campaignInsights, contactsbyCampaign]);
 
   // console.log('contactCountsByCampaign', contactCountsByCampaign);
 
@@ -82,12 +86,7 @@ export default function CampaignsTable() {
 
     setShow(true);
 
-    if (matchingContact) {
-      // console.log(matchingContact);
-      setContactsInfo(matchingContact);
-    } else {
-      console.log('No matching contact found.');
-    }
+    if (matchingContact) setContactsInfo(matchingContact);
   };
 
   return (
@@ -111,7 +110,7 @@ export default function CampaignsTable() {
           overflow: 'auto',
           backgroundColor: 'transparent',
         }}
-        sx={{ maxHeight: 350, maxWidth: 1150 }}
+        sx={{ maxHeight: 350, maxWidth: 900 }}
       >
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>

@@ -15,7 +15,7 @@ import './MainDash.css';
 const MainDash = () => {
   return (
     <div className="MainDash">
-      <h2>Admin Dashboard</h2>
+      <h3>Admin Dashboard</h3>
       <Routes>
         <Route path="/" element={<AccountsDataStore><Accounts /></AccountsDataStore>}/>
         <Route path="/accounts" element={<AccountsDataStore><Accounts /></AccountsDataStore>}/>
