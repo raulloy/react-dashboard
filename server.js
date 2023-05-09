@@ -103,10 +103,10 @@ const accounts = [
     name: 'HU PASEOS DE LOS VIRREYES',
     id: 'act_3064079737176705',
   },
-  // {
-  //   name: 'HU BDI',
-  //   id: 'act_793700688385551',
-  // },
+  {
+    name: 'HU BDI',
+    id: 'act_793700688385551',
+  },
 ];
 
 app.get('/', (req, res) => {
