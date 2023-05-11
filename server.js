@@ -9,6 +9,7 @@ import {
 import path from 'path';
 import Contact from './models/contactModel.js';
 import mongoose from 'mongoose';
+import { campaigns } from './google-api.js';
 
 mongoose
   .connect(config.MONGODB_URL)
@@ -188,6 +189,10 @@ app.get('/api/contacts-by-time-range', async (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   }
+});
+
+app.get('/api/google-campaigns', async (req, res) => {
+  res.send(campaigns);
 });
 
 // Body Parser Middleware
