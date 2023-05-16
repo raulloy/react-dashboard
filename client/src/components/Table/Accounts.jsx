@@ -51,6 +51,7 @@ export default function AccountsTable() {
         <TableContainer
           component={Paper}
           style={{
+            width: '100%',
             boxShadow: '0px 13px 20px 0px #80808029',
             overflow: 'auto',
             backgroundColor: 'transparent',

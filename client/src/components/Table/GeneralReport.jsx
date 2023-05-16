@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useContext } from 'react';
-
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,7 +8,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { TableFooter } from '@mui/material';
-
 import { accounts } from '../../data/data';
 import { DateDropdown } from '../DatePickers/DateDropdown';
 import { CampaignsDataStoreContext } from '../../data/CampaignsDataStore';
@@ -154,7 +152,7 @@ export default function CampaignsTable() {
           overflow: 'auto',
           backgroundColor: 'transparent',
         }}
-        sx={{ maxHeight: 350, maxWidth: 900 }}
+        sx={{ maxHeight: 350 }}
       >
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>

@@ -2,6 +2,7 @@ import express from 'express';
 import config from './config.js';
 import {
   getAccountInsights,
+  getAdSetsInsights,
   getAllAdSetsInsights,
   getAllAdsInsights,
   getCampaignInsights,
