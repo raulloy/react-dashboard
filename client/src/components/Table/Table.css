@@ -57,6 +57,16 @@ th {
   color: #00b5ff !important;
 }
 
+.fullscreen-modal .modal-dialog {
+  max-width: 90%;
+  width: 90%;
+  margin: auto;
+}
+
+.fullscreen-modal .modal-content {
+  border-radius: 0;
+}
+
 .popup-table td {
   white-space: nowrap;
   overflow: hidden;
