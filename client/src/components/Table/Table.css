@@ -39,6 +39,10 @@
   margin-top: 10px;
 }
 
+.header-bold {
+  font-weight: bold;
+}
+
 .Table td,
 th {
   border: none !important;

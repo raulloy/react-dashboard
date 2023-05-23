@@ -135,7 +135,7 @@ export const getAllAdsInsights = async (
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${accountID}?fields=name,adsets.limit(60){name,status,objective,ads{name,account_id,adset_id,adset{name},status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}}&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v15.0/${accountID}?fields=name,campaigns.limit(50){name,status,objective,adsets.limit(60){name,status,campaign{objective},ads{name,account_id,campaign{objective},adset_id,adset{name},status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}}}&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {

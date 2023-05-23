@@ -10,7 +10,7 @@ import {
 import path from 'path';
 import Contact from './models/contactModel.js';
 import mongoose from 'mongoose';
-import { campaigns } from './google-api.js';
+// import { campaigns } from './google-api.js';
 
 mongoose
   .connect(config.MONGODB_URL)
@@ -172,7 +172,7 @@ app.get('/api/ads-insights/:id', async (req, res) => {
     until
   );
 
-  res.send(AccountInsights.adsets);
+  res.send(AccountInsights.campaigns);
 });
 
 app.get('/api/contacts-by-time-range', async (req, res) => {
@@ -192,9 +192,9 @@ app.get('/api/contacts-by-time-range', async (req, res) => {
   }
 });
 
-app.get('/api/google-campaigns', async (req, res) => {
-  res.send(campaigns);
-});
+// app.get('/api/google-campaigns', async (req, res) => {
+//   res.send(campaigns);
+// });
 
 // Body Parser Middleware
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
