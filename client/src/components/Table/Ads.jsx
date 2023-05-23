@@ -69,7 +69,6 @@ export default function AdsTable() {
         return 0;
       }
     });
-  console.log(adsData);
 
   const contactsbyCampaign = contacts.map(({ id, properties }) => ({
     id,
@@ -301,7 +300,7 @@ export default function AdsTable() {
           />
         </div>
 
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show} onHide={handleClose} className="fullscreen-modal">
           <Modal.Header closeButton>
             <Modal.Title>Asignaciones</Modal.Title>
           </Modal.Header>

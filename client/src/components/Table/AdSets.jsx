@@ -331,7 +331,7 @@ export default function AdSetsTable() {
           />
         </div>
 
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show} onHide={handleClose} className="fullscreen-modal">
           <Modal.Header closeButton>
             <Modal.Title>Asignaciones</Modal.Title>
           </Modal.Header>
@@ -389,63 +389,3 @@ export default function AdSetsTable() {
     </div>
   );
 }
-
-// const campaignInsights = [
-//   {
-//     name: 'Lomas de la Plata-Oro/IGStoriesCon/Leads/26-04-2023',
-//     account_id: '930432200705578',
-//     campaign_id: '23854211679280359',
-//     campaign: {
-//       name: 'Lomas de la Plata-Oro/IGStoriesCam/Leads/26-04-2023',
-//       id: '23854211679280359',
-//     },
-//     status: 'ACTIVE',
-//     id: '23854211679290359',
-//   },
-//   {
-//     name: 'Lomas de la Plata-General/FbCon/Leads/20-04-23',
-//     account_id: '930432200705578',
-//     campaign_id: '23854126524780359',
-//     campaign: {
-//       name: 'Lomas de la Plata-General/FbCam/Leads/20-04-23',
-//       id: '23854126524780359',
-//     },
-//     status: 'ACTIVE',
-//     insights: {
-//       data: [
-//         {
-//           reach: '53509',
-//           clicks: '534',
-//           impressions: '76121',
-//           spend: '2241.12',
-//           cpc: '4.196854',
-//           ctr: '0.701515',
-//         },
-//       ],
-//     },
-//     id: '23854126525510359',
-//   },
-//   {
-//     name: 'Lomas de la Plata- Platino/FBCon/Leads/RMK/01-03-23',
-//     account_id: '930432200705578',
-//     campaign_id: '23854112376210359',
-//     campaign: {
-//       name: 'Lomas de la Plata- Platino/FBCam/Leads/RMK/01-03-23',
-//       id: '23854112376210359',
-//     },
-//     status: 'ACTIVE',
-//     insights: {
-//       data: [
-//         {
-//           reach: '15200',
-//           clicks: '412',
-//           impressions: '19839',
-//           spend: '2289.83',
-//           cpc: '5.55784',
-//           ctr: '2.076718',
-//         },
-//       ],
-//     },
-//     id: '23854112398650359',
-//   },
-// ];
