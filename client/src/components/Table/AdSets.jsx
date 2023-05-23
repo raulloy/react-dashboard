@@ -9,6 +9,7 @@ import './Table.css';
 import { Link } from 'react-router-dom';
 import AdSetsCards from '../Cards/AdSetsCards';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { saveAs } from 'file-saver';
 
 export default function AdSetsTable() {
   const {
@@ -125,6 +126,46 @@ export default function AdSetsTable() {
     } else {
       console.log('No matching contact found.');
     }
+  };
+
+  const generateCSV = () => {
+    const headers = [
+      'Desarrollo',
+      'Canal de captación',
+      'Subcanal de captación',
+      'Fecha de asignación',
+      'Correo',
+      'Fecha de creación',
+      'Facilitador',
+      'Fuente original',
+      'Etapa del ciclo de vida',
+      'Estado del lead',
+    ];
+
+    const csvContent = [
+      headers.join(','),
+      ...contactsInfo.map((contact) =>
+        [
+          contact.properties.desarrollo,
+          contact.properties.canal_de_captacion,
+          contact.properties.sub_canal_de_captacion,
+          new Date(
+            contact.properties.hubspot_owner_assigneddate
+          ).toLocaleDateString('es-MX'),
+          contact.properties.email,
+          new Date(contact.properties.createdate).toLocaleDateString('es-MX'),
+          contact.properties.facilitador_compra_contacto,
+          contact.properties.hs_analytics_source,
+          contact.properties.lifecyclestage,
+          contact.properties.hs_lead_status,
+        ].join(',')
+      ),
+    ].join('\n');
+
+    const blob = new Blob(['\ufeff' + csvContent], {
+      type: 'text/csv;charset=utf-8;',
+    });
+    saveAs(blob, 'contacts.csv');
   };
 
   const columns = [
@@ -382,6 +423,9 @@ export default function AdSetsTable() {
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Cerrar
+            </Button>
+            <Button variant="primary" onClick={generateCSV}>
+              Descargar CSV
             </Button>
           </Modal.Footer>
         </Modal>
