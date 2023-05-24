@@ -31,6 +31,7 @@ export default function AdsTable() {
 
   const adSetsInsights = campaignInsights
     .map((element) => element.adsets)
+    .filter((element) => element !== undefined)
     .map((element) => element.data)
     .flat()
     .map((element) => element.ads && element.ads.data)
@@ -47,29 +48,11 @@ export default function AdsTable() {
 
   const adsData = campaignInsights
     .map((element) => element.adsets)
+    .filter((element) => element !== undefined)
     .map((element) => element.data)
     .flat()
     .map((element) => (element.ads ? element.ads.data : []))
-    .flat()
-    .sort((a, b) => {
-      if (
-        a.insights &&
-        a.insights.data &&
-        a.insights.data[0] &&
-        parseFloat(a.insights.data[0].spend) > 0
-      ) {
-        return -1;
-      } else if (
-        b.insights &&
-        b.insights.data &&
-        b.insights.data[0] &&
-        parseFloat(b.insights.data[0].spend) > 0
-      ) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
+    .flat();
 
   const contactsbyCampaign = contacts.map(({ id, properties }) => ({
     id,

@@ -39,30 +39,11 @@ export default function AdSetsTable() {
 
   const adsetsData = campaignInsights
     .map((element) => (element.adsets ? element.adsets.data : []))
-    .flat()
-    .sort((a, b) => {
-      if (
-        a.insights &&
-        a.insights.data &&
-        a.insights.data[0] &&
-        parseFloat(a.insights.data[0].spend) > 0
-      ) {
-        return -1;
-      } else if (
-        b.insights &&
-        b.insights.data &&
-        b.insights.data[0] &&
-        parseFloat(b.insights.data[0].spend) > 0
-      ) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
+    .flat();
 
   const transformedCampaigns = campaignInsights
     .map((campaign) => {
-      const adsetData = campaign.adsets.data.map((adset) => {
+      const adsetData = campaign.adsets?.data?.map((adset) => {
         const { name, account_id, campaign_id, status, insights, id } = adset;
 
         const campaignObjective = campaign.objective;
@@ -224,72 +205,29 @@ export default function AdSetsTable() {
     { field: 'ctr', headerName: 'CTR', width: 100 },
   ];
 
-  const rows = transformedCampaigns.map((row) => ({
-    id: row.id,
-    campaign: row.campaign.name,
-    adset: row.name,
-    objective: row.objective,
-    spent: `$${parseFloat(
-      row.insights ? row.insights.data[0].spend : 0
-    ).toLocaleString('en-US')}`,
-    results:
-      row.objective === 'MESSAGES' &&
-      row.insights &&
-      row.insights.data &&
-      row.insights.data[0].actions
-        ? (
-            row.insights.data[0].actions.find(
-              (element) =>
-                element.action_type ===
-                'onsite_conversion.messaging_conversation_started_7d'
-            ) || {}
-          ).value + ' Msgs'
-        : row.objective === 'OUTCOME_ENGAGEMENT' &&
-          row.insights &&
-          row.insights.data &&
-          row.insights.data[0].actions
-        ? (
-            row.insights.data[0].actions.find(
-              (element) =>
-                element.action_type ===
-                'onsite_conversion.messaging_conversation_started_7d'
-            ) || {}
-          ).value + ' Msgs'
-        : (row.objective === 'OUTCOME_LEADS' ||
-            row.objective === 'LEAD_GENERATION') &&
-          row.insights &&
-          row.insights.data &&
-          row.insights.data[0].actions
-        ? (
-            row.insights.data[0].actions.find(
-              (element) => element.action_type === 'lead'
-            ) || {}
-          ).value + ' Leads'
-        : (row.objective === 'LINK_CLICKS' ||
-            row.objective === 'OUTCOME_TRAFFIC') &&
-          row.insights &&
-          row.insights.data &&
-          row.insights.data[0].actions
-        ? (
-            row.insights.data[0].actions.find(
-              (element) => element.action_type === 'link_click'
-            ) || {}
-          ).value + ' Clicks'
-        : 0,
-    costByResults: `$${(
-      (row.insights ? row.insights.data[0].spend : 0) /
-      parseFloat(
+  // console.log(transformedCampaigns);
+  const rows = transformedCampaigns
+    .filter((element) => element !== undefined)
+    .map((row) => ({
+      id: row.id,
+      campaign: row.campaign.name,
+      adset: row.name,
+      objective: row.objective,
+      spent: `$${parseFloat(
+        row.insights ? row.insights.data[0].spend : 0
+      ).toLocaleString('en-US')}`,
+      results:
         row.objective === 'MESSAGES' &&
-          row.insights &&
-          row.insights.data &&
-          row.insights.data[0].actions
+        row.insights &&
+        row.insights.data &&
+        row.insights.data[0].actions
           ? (
               row.insights.data[0].actions.find(
                 (element) =>
                   element.action_type ===
                   'onsite_conversion.messaging_conversation_started_7d'
               ) || {}
-            ).value
+            ).value + ' Msgs'
           : row.objective === 'OUTCOME_ENGAGEMENT' &&
             row.insights &&
             row.insights.data &&
@@ -300,7 +238,7 @@ export default function AdSetsTable() {
                   element.action_type ===
                   'onsite_conversion.messaging_conversation_started_7d'
               ) || {}
-            ).value
+            ).value + ' Msgs'
           : (row.objective === 'OUTCOME_LEADS' ||
               row.objective === 'LEAD_GENERATION') &&
             row.insights &&
@@ -310,7 +248,7 @@ export default function AdSetsTable() {
               row.insights.data[0].actions.find(
                 (element) => element.action_type === 'lead'
               ) || {}
-            ).value
+            ).value + ' Leads'
           : (row.objective === 'LINK_CLICKS' ||
               row.objective === 'OUTCOME_TRAFFIC') &&
             row.insights &&
@@ -320,27 +258,73 @@ export default function AdSetsTable() {
               row.insights.data[0].actions.find(
                 (element) => element.action_type === 'link_click'
               ) || {}
-            ).value
-          : 1
-      )
-    ).toFixed(2)}`,
-    status: row.status,
-    assignments: [contactCountsByCampaign].reduce(
-      (acc, obj) => (row.id in obj ? obj[row.id] : acc),
-      0
-    ),
-    reach: parseInt(
-      row.insights ? row.insights.data[0].reach : 0
-    ).toLocaleString('en-US'),
-    impressions: parseInt(
-      row.insights ? row.insights.data[0].impressions : 0
-    ).toLocaleString('en-US'),
-    clicks: parseInt(
-      row.insights ? row.insights.data[0].clicks : 0
-    ).toLocaleString('en-US'),
-    cpc: parseFloat(row.insights ? row.insights.data[0].cpc : 0).toFixed(2),
-    ctr: parseFloat(row.insights ? row.insights.data[0].ctr : 0).toFixed(2),
-  }));
+            ).value + ' Clicks'
+          : 0,
+      costByResults: `$${(
+        (row.insights ? row.insights.data[0].spend : 0) /
+        parseFloat(
+          row.objective === 'MESSAGES' &&
+            row.insights &&
+            row.insights.data &&
+            row.insights.data[0].actions
+            ? (
+                row.insights.data[0].actions.find(
+                  (element) =>
+                    element.action_type ===
+                    'onsite_conversion.messaging_conversation_started_7d'
+                ) || {}
+              ).value
+            : row.objective === 'OUTCOME_ENGAGEMENT' &&
+              row.insights &&
+              row.insights.data &&
+              row.insights.data[0].actions
+            ? (
+                row.insights.data[0].actions.find(
+                  (element) =>
+                    element.action_type ===
+                    'onsite_conversion.messaging_conversation_started_7d'
+                ) || {}
+              ).value
+            : (row.objective === 'OUTCOME_LEADS' ||
+                row.objective === 'LEAD_GENERATION') &&
+              row.insights &&
+              row.insights.data &&
+              row.insights.data[0].actions
+            ? (
+                row.insights.data[0].actions.find(
+                  (element) => element.action_type === 'lead'
+                ) || {}
+              ).value
+            : (row.objective === 'LINK_CLICKS' ||
+                row.objective === 'OUTCOME_TRAFFIC') &&
+              row.insights &&
+              row.insights.data &&
+              row.insights.data[0].actions
+            ? (
+                row.insights.data[0].actions.find(
+                  (element) => element.action_type === 'link_click'
+                ) || {}
+              ).value
+            : 1
+        )
+      ).toFixed(2)}`,
+      status: row.status,
+      assignments: [contactCountsByCampaign].reduce(
+        (acc, obj) => (row.id in obj ? obj[row.id] : acc),
+        0
+      ),
+      reach: parseInt(
+        row.insights ? row.insights.data[0].reach : 0
+      ).toLocaleString('en-US'),
+      impressions: parseInt(
+        row.insights ? row.insights.data[0].impressions : 0
+      ).toLocaleString('en-US'),
+      clicks: parseInt(
+        row.insights ? row.insights.data[0].clicks : 0
+      ).toLocaleString('en-US'),
+      cpc: parseFloat(row.insights ? row.insights.data[0].cpc : 0).toFixed(2),
+      ctr: parseFloat(row.insights ? row.insights.data[0].ctr : 0).toFixed(2),
+    }));
 
   const footerRow = {
     id: 'grand-total',

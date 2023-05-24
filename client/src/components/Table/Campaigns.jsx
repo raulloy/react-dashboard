@@ -33,19 +33,6 @@ export default function CampaignsTable() {
     }, 0);
   }, [campaignInsights]);
 
-  const sortedCampaigns = campaignInsights.sort((a, b) => {
-    // Compare the "spend" properties of the two objects
-    const aSpend = parseFloat(a.insights ? a.insights.data[0].spend : 0);
-    const bSpend = parseFloat(b.insights ? b.insights.data[0].spend : 0);
-    if (aSpend > 0 && bSpend <= 0) {
-      return -1; // a comes first
-    } else if (aSpend <= 0 && bSpend > 0) {
-      return 1; // b comes first
-    }
-
-    return 0; // No changes to order
-  });
-
   const contactsbyCampaign = contacts.map(({ id, properties }) => ({
     id,
     hs_analytics_first_url: properties.hs_analytics_first_url
@@ -191,7 +178,7 @@ export default function CampaignsTable() {
     { field: 'ctr', headerName: 'CTR', width: 100 },
   ];
 
-  const rows = sortedCampaigns.map((row) => ({
+  const rows = campaignInsights.map((row) => ({
     id: row.id,
     campaign: row.name,
     objective: row.objective,
