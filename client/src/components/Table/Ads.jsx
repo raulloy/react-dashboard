@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useContext } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { accounts } from '../../data/data';
+import { accounts, facilitadores } from '../../data/data';
 import { DateDropdown } from '../DatePickers/DateDropdown';
 import { AdsDataStoreContext } from '../../data/AdsDataStore';
 import { statusStyle } from './utils';
@@ -362,7 +362,17 @@ export default function AdsTable() {
                           contact.properties.createdate
                         ).toLocaleDateString('es-MX')}
                       </td>
-                      <td>{contact.properties.facilitador_compra_contacto}</td>
+                      <td>
+                        {
+                          facilitadores.find(
+                            (element) =>
+                              element.ID ===
+                              parseInt(
+                                contact.properties.facilitador_compra_contacto
+                              )
+                          ).Nombre
+                        }
+                      </td>
                       <td>{contact.properties.hs_analytics_source}</td>
                       <td>{contact.properties.lifecyclestage}</td>
                       <td>{contact.properties.hs_lead_status}</td>
