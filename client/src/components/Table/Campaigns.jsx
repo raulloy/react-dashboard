@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useContext, useMemo } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { accounts, facilitadores } from '../../data/data';
+import { accounts } from '../../data/data';
 import { DateDropdown } from '../DatePickers/DateDropdown';
 import { CampaignsDataStoreContext } from '../../data/CampaignsDataStore';
 import { statusStyle } from './utils';
@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import CampaignCards from '../Cards/CampaingCards';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { saveAs } from 'file-saver';
+import { facilitadores } from '../../facilitadores';
 
 import './Table.css';
 
@@ -368,15 +369,13 @@ export default function CampaignsTable() {
                         ).toLocaleDateString('es-MX')}
                       </td>
                       <td>
-                        {
-                          facilitadores.find(
-                            (element) =>
-                              element.ID ===
-                              parseInt(
-                                contact.properties.facilitador_compra_contacto
-                              )
-                          ).Nombre
-                        }
+                        {facilitadores.find(
+                          (element) =>
+                            element?.ID ===
+                            parseInt(
+                              contact.properties.facilitador_compra_contacto
+                            )
+                        )?.Nombre || ''}
                       </td>
                       <td>{contact.properties.hs_analytics_source}</td>
                       <td>{contact.properties.lifecyclestage}</td>
