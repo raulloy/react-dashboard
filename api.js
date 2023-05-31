@@ -9,7 +9,7 @@ export const getAccountInsights = async (
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${accountId}/insights?fields=account_id,account_name,reach,clicks,impressions,spend,cpc,ctr,conversions,frequency,actions&time_range={'since':'${since}','until':'${until}'}&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v15.0/${accountId}/insights?fields=account_id,account_name,reach,clicks,impressions,spend,cpc,ctr,conversions,frequency,actions&time_range={'since':'${since}','until':'${until}'}&limit=30&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {
