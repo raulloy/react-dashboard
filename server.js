@@ -2,7 +2,6 @@ import express from 'express';
 import config from './config.js';
 import {
   getAccountInsights,
-  getAdSetsInsights,
   getAllAdSetsInsights,
   getAllAdsInsights,
   getCampaignInsights,
@@ -10,7 +9,6 @@ import {
 import path from 'path';
 import Contact from './models/contactModel.js';
 import mongoose from 'mongoose';
-// import { campaigns } from './google-api.js';
 
 mongoose
   .connect(config.MONGODB_URL)
@@ -200,10 +198,6 @@ app.get('/api/contacts-by-time-range', async (req, res) => {
   }
 });
 
-// app.get('/api/google-campaigns', async (req, res) => {
-//   res.send(campaigns);
-// });
-
 // Body Parser Middleware
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 app.use(express.static(path.join(__dirname, 'client/build')));
@@ -211,46 +205,3 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 app.listen(config.PORT, () => {
   console.log(`Server is listening on port ${config.PORT}`);
 });
-
-// [
-//   {
-//     properties: {
-//       canal_de_captacion: 'DIGIN',
-//       createdate: '2023-02-01T19:27:02.000Z',
-//       facilitador_compra_contacto: '254740026',
-//       sub_canal_de_captacion: 'FACE',
-//     },
-//     _id: '6425ab393a4a7b046f368045',
-//     createdAt: '2023-02-01T19:27:02.000Z',
-//   },
-//   {
-//     properties: {
-//       canal_de_captacion: 'DIGIN',
-//       createdate: '2023-02-01T19:17:18.000Z',
-//       facilitador_compra_contacto: '256237624',
-//       sub_canal_de_captacion: 'FACE',
-//     },
-//     _id: '6425ab393a4a7b046f368057',
-//     createdAt: '2023-02-01T19:17:18.000Z',
-//   },
-//   {
-//     properties: {
-//       canal_de_captacion: 'DIGIN',
-//       createdate: '2023-02-01T18:48:06.000Z',
-//       facilitador_compra_contacto: '254740024',
-//       sub_canal_de_captacion: 'FACE',
-//     },
-//     _id: '6425ab393a4a7b046f3680b1',
-//     createdAt: '2023-02-01T18:48:06.000Z',
-//   },
-//   {
-//     properties: {
-//       canal_de_captacion: 'DIGIN',
-//       createdate: '2023-02-01T18:39:13.000Z',
-//       facilitador_compra_contacto: '144053855',
-//       sub_canal_de_captacion: 'FACE',
-//     },
-//     _id: '6425ab393a4a7b046f3680db',
-//     createdAt: '2023-02-01T18:39:13.000Z',
-//   },
-// ];
