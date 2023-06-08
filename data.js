@@ -5,14 +5,26 @@ const data = {
     {
       name: 'Raul Loyola',
       email: 'rloyola@hogaresunion.mx',
-      password: bcrypt.hashSync('123456'),
+      password: bcrypt.hashSync('HogaresUnion23'),
       isAdmin: true,
     },
     {
-      name: 'User',
-      email: 'user@example.com',
-      password: bcrypt.hashSync('123456'),
-      isAdmin: false,
+      name: 'Juan Buffa',
+      email: 'jpablo@hogaresunion.mx',
+      password: bcrypt.hashSync('HogaresUnion23'),
+      isAdmin: true,
+    },
+    {
+      name: 'Gerardo Magaña',
+      email: 'jmaganag@hogaresunion.mx',
+      password: bcrypt.hashSync('HogaresUnion23'),
+      isAdmin: true,
+    },
+    {
+      name: 'Sergio Sánchez',
+      email: 'ssancheza@hogaresunion.mx',
+      password: bcrypt.hashSync('HogaresUnion23'),
+      isAdmin: true,
     },
   ],
 };

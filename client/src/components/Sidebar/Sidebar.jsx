@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import './Sidebar.css';
 import gimLogo from '../../images/gim-logo.png';
-import { FiLogIn } from 'react-icons/fi';
 import { SidebarData } from '../../data/data';
 import { FaBars } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
+import './Sidebar.css';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -77,11 +76,6 @@ const Sidebar = () => {
               </Link>
             );
           })}
-          {/* signoutIcon */}
-          <div className="menuItem">
-            <FiLogIn />
-            <span>Logout</span>
-          </div>
         </div>
       </motion.div>
     </>

@@ -9,6 +9,8 @@ import {
 import path from 'path';
 import Contact from './models/contactModel.js';
 import mongoose from 'mongoose';
+import seedRouter from './routes/seedRoutes.js';
+import userRouter from './routes/userRoutes.js';
 
 mongoose
   .connect(config.MONGODB_URL)
@@ -23,6 +25,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/api/seed', seedRouter);
 app.use('/api/users', userRouter);
 
 app.use((err, req, res, next) => {
