@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import './Sidebar.css';
 
-const Sidebar = () => {
+const Sidebar = ({ signoutHandler }) => {
   const location = useLocation();
   const [expanded, setExpaned] = useState(true);
 
@@ -70,6 +70,7 @@ const Sidebar = () => {
                 to={item.path}
                 className={isActive ? 'menuItem active' : 'menuItem'}
                 key={index}
+                onClick={item.path ? signoutHandler : null}
               >
                 <item.icon />
                 <span>{item.heading}</span>

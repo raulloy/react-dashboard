@@ -9,14 +9,18 @@ function App() {
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
-  console.log(userInfo);
+
+  const signoutHandler = () => {
+    localStorage.removeItem('userInfo');
+    document.location.reload();
+  };
 
   return (
     <div className="App">
       <div className="AppGlass">
         {userInfo ? (
           <BrowserRouter>
-            <Sidebar />
+            <Sidebar signoutHandler={signoutHandler} />
             <MainDash />
             <RightSide />
           </BrowserRouter>
