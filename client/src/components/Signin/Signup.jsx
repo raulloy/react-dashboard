@@ -1,26 +1,16 @@
 import Axios from 'axios';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { getError } from '../../utils';
 
 export default function SignupScreen() {
-  const navigate = useNavigate();
-  const { search } = useLocation();
-  const redirectInUrl = new URLSearchParams(search).get('redirect');
-  const redirect = redirectInUrl ? redirectInUrl : '/';
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
-  //   const userInfo = localStorage.getItem('userInfo')
-  //     ? JSON.parse(localStorage.getItem('userInfo'))
-  //     : null;
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -83,10 +73,6 @@ export default function SignupScreen() {
         </Form.Group>
         <div className="mb-3">
           <Button type="submit">Sign Up</Button>
-        </div>
-        <div className="mb-3">
-          Already have an account?{' '}
-          <Link to={`/signin?redirect=${redirect}`}>Sign-In</Link>
         </div>
       </Form>
     </Container>
