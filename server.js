@@ -11,6 +11,7 @@ import Contact from './models/contactModel.js';
 import mongoose from 'mongoose';
 import seedRouter from './routes/seedRoutes.js';
 import userRouter from './routes/userRoutes.js';
+import contactRouter from './routes/contactRouter.js';
 
 mongoose
   .connect(config.MONGODB_URL)
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/seed', seedRouter);
 app.use('/api/users', userRouter);
+app.use('/api/contacts', contactRouter);
 
 app.use((err, req, res, next) => {
   res.status(500).send({ message: err.message });

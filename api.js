@@ -64,48 +64,6 @@ export const getAdSetsInsights = async (
   }
 };
 
-// export const getAdSetsInsights = async (
-//   accessToken,
-//   campaignID,
-//   since = '2023-02-01',
-//   until = '2023-02-28'
-// ) => {
-//   try {
-//     const response = await axios({
-//       url: `https://graph.facebook.com/v15.0/${campaignID}?fields=name,objective,adsets{name,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
-//       method: 'GET',
-//       mode: 'cors',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     return error;
-//   }
-// };
-
-// export const getAdsInsights = async (
-//   accessToken,
-//   adSetID,
-//   since = '2023-02-01',
-//   until = '2023-02-28'
-// ) => {
-//   try {
-//     const response = await axios({
-//       url: `https://graph.facebook.com/v15.0/${adSetID}?fields=name,ads.limit(50){name,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
-//       method: 'GET',
-//       mode: 'cors',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     return error;
-//   }
-// };
-
 export const getAllAdSetsInsights = async (
   accessToken,
   accountID,
@@ -163,14 +121,14 @@ export const getContacts = async (limit, after) => {
           {
             filters: [
               {
-                propertyName: 'createdate',
+                propertyName: 'hubspot_owner_assigneddate',
                 operator: 'GTE',
-                value: new Date('2023-04-01').getTime(),
+                value: new Date('2023-05-10').getTime(),
               },
               {
-                propertyName: 'createdate',
+                propertyName: 'hubspot_owner_assigneddate',
                 operator: 'LTE',
-                value: new Date('2023-04-04').getTime() + 86400000, // add 1 day in milliseconds to include contacts from this day
+                value: new Date('2023-05-14').getTime() + 86400000,
               },
             ],
           },
