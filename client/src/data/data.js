@@ -54,6 +54,11 @@ export const SidebarData = [
     path: '/google-ads',
   },
   {
+    icon: TbReport,
+    heading: 'General',
+    path: '/general',
+  },
+  {
     icon: FiLogIn,
     heading: 'Logout',
     path: '/profile',
