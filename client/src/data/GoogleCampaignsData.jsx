@@ -59,3 +59,37 @@ export const AccountComponent = ({ since, until, accountId }) => {
     </div>
   );
 };
+
+export const GoogleSpendByAccount = (since, until, accountId) => {
+  const [googleCampaignInsights, setGoogleCampaignInsights] = useState([]);
+  const [totalSpend, setTotalSpend] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch Campaign Insights
+        const campaignsResponse = await googleCampaignsData(
+          accountId,
+          since,
+          until
+        );
+        setGoogleCampaignInsights(campaignsResponse);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, [since, until, accountId]);
+
+  useEffect(() => {
+    // Calculate total spend
+    const spend = googleCampaignInsights.reduce(
+      (total, insight) => total + insight.metrics.cost_micros,
+      0
+    );
+    setTotalSpend(spend);
+  }, [googleCampaignInsights]);
+
+  return totalSpend;
+};

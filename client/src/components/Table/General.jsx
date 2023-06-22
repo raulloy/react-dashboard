@@ -1,32 +1,28 @@
 import * as React from 'react';
-import { useState, useContext, useEffect } from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { Modal, Button } from 'react-bootstrap';
+import { useContext } from 'react';
 import DateRangeInput from '../DatePickers/DateRangeInput';
 import { AccountsDataStoreContext } from '../../data/AccountsDataStore';
-import Cards from '../Cards/Cards';
-import { saveAs } from 'file-saver';
-import { facilitadores } from '../../facilitadores';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { accounts, googleAccounts } from '../../data/data';
-import { googleCampaignsData } from '../../data/google';
-import { AccountComponent } from '../../data/GoogleCampaignsData';
+import { GoogleSpendByAccount } from '../../data/GoogleCampaignsData';
 import './Table.css';
 
 export default function GeneralTable() {
-  const { since, setSince, until, setUntil, accountInsights, contacts } =
-    useContext(AccountsDataStoreContext);
+  const { since, setSince, until, setUntil, accountInsights } = useContext(
+    AccountsDataStoreContext
+  );
 
   // Calculate Grand Total Spend
   const grandTotalSpend = accountInsights.reduce((total, element) => {
     return total + parseFloat(element?.spend);
   }, 0);
+
+  // Calculate Grand Total CPC
+  const grandTotalCPC =
+    accountInsights.reduce((acc, curr) => acc + parseFloat(curr?.cpc ?? 0), 0) /
+    accountInsights.length;
+
+  console.table(grandTotalCPC);
 
   const totalSpendByCompany = accountInsights.reduce((result, element) => {
     const { account_name, spend } = element;
@@ -45,6 +41,65 @@ export default function GeneralTable() {
     return <div>Getting data...</div>;
   }
 
+  const fbColumns = [
+    {
+      field: 'channel',
+      headerName: 'Canal',
+      width: 150,
+      renderHeader: () => <div className="header-bold">Canal</div>,
+    },
+    {
+      field: 'company',
+      headerName: 'Campaña',
+      width: 300,
+      renderHeader: () => <div className="header-bold">Campaña</div>,
+    },
+    {
+      field: 'totalSpend',
+      headerName: 'Gastado',
+      width: 160,
+      renderHeader: () => <div className="header-bold">Gastado</div>,
+    },
+  ];
+
+  const fbRows = Object.entries(totalSpendByCompany).map(
+    ([company, totalSpend]) => ({
+      id: company,
+      channel: 'FACEBOOK',
+      company,
+      totalSpend: `$${totalSpend.toLocaleString('en-US')}`,
+    })
+  );
+
+  const googleRows = googleAccounts.map((company) => ({
+    id: company.id,
+    channel: 'GOOGLE',
+    company: company.name,
+    totalSpend: `$${(
+      GoogleSpendByAccount(since, until, company.id) / 1000000
+    ).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`,
+  }));
+
+  const totalSpendSum = googleAccounts.reduce((sum, company) => {
+    const totalSpend = (
+      GoogleSpendByAccount(since, until, company.id) / 1000000
+    ).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+    return sum + parseFloat(totalSpend.replace(',', ''));
+  }, 0);
+
+  const fbFooterRow = {
+    id: 'grand-total',
+    channel: 'GRAND TOTAL',
+    totalSpend: `$${(grandTotalSpend + totalSpendSum).toLocaleString('en-US')}`,
+  };
+
   return (
     <div>
       {/* <Cards /> */}
@@ -57,42 +112,13 @@ export default function GeneralTable() {
           setUntil={setUntil}
         />
 
-        <div style={{ marginBottom: '1rem' }}>
-          <strong style={{ borderBottom: '1px solid black' }}>FACEBOOK</strong>
-          <br />
-          {Object.entries(totalSpendByCompany).map(([company, totalSpend]) => (
-            <div style={{ height: '26px' }}>
-              <p
-                style={{
-                  width: '165px',
-                  display: 'inline-block',
-                }}
-              >
-                {company}
-              </p>
-              ${totalSpend.toLocaleString('en-US')}
-            </div>
-          ))}
-          <div>
-            <strong>
-              <p style={{ width: '165px', display: 'inline-block' }}>
-                TOTAL GENERAL:
-              </p>
-              ${grandTotalSpend.toLocaleString('en-US')}
-            </strong>
-          </div>
-        </div>
-
-        <div style={{ marginBottom: '1rem' }}>
-          <strong style={{ borderBottom: '1px solid black' }}>GOOGLE</strong>
-          {googleAccounts.map((account) => (
-            <AccountComponent
-              key={account.id}
-              since={since}
-              until={until}
-              accountId={account.id}
-            />
-          ))}
+        <div className="table-container">
+          <DataGrid
+            rows={[...fbRows, ...googleRows, fbFooterRow]}
+            columns={fbColumns}
+            checkboxSelection
+            components={{ Toolbar: GridToolbar }}
+          />
         </div>
       </div>
     </div>
