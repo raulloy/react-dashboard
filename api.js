@@ -123,12 +123,12 @@ export const getContacts = async (limit, after) => {
               {
                 propertyName: 'hubspot_owner_assigneddate',
                 operator: 'GTE',
-                value: new Date('2023-05-10').getTime(),
+                value: new Date('2023-06-24').getTime(),
               },
               {
                 propertyName: 'hubspot_owner_assigneddate',
                 operator: 'LTE',
-                value: new Date('2023-05-14').getTime() + 86400000,
+                value: new Date('2023-06-26').getTime() + 86400000,
               },
             ],
           },
