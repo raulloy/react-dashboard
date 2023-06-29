@@ -162,6 +162,7 @@ export const GoogleLeadsByAccount = (since, until, accountId) => {
 
   return totalConversions;
 };
+
 export const GoogleDataByAccount = (since, until, accountId) => {
   const [googleCampaignInsights, setGoogleCampaignInsights] = useState([]);
 

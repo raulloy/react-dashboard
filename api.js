@@ -121,14 +121,9 @@ export const getContacts = async (limit, after) => {
           {
             filters: [
               {
-                propertyName: 'hubspot_owner_assigneddate',
-                operator: 'GTE',
-                value: new Date('2023-06-24').getTime(),
-              },
-              {
-                propertyName: 'hubspot_owner_assigneddate',
-                operator: 'LTE',
-                value: new Date('2023-06-26').getTime() + 86400000,
+                propertyName: 'email',
+                operator: 'EQ',
+                value: 'carlos12.hdz00@gmail.com',
               },
             ],
           },
@@ -160,6 +155,9 @@ export const getContacts = async (limit, after) => {
           'lifecyclestage',
           'hs_analytics_source',
           'hs_analytics_first_url',
+          'recent_deal_amount',
+          'recent_deal_close_date',
+          'num_associated_deals',
         ],
       },
     });

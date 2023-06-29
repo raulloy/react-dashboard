@@ -130,21 +130,35 @@ export default function GeneralTable() {
     0
   );
 
-  // googleAccounts.map((company) =>
-  //   console.log(GoogleDataByAccount(since, until, company.id))
-  // );
-
   // const googleAssignments = googleAccounts
   //   .map((company) => {
-  //     const result = contactsbyGoogleCampaign.filter(
-  //       (campaign) =>
-  //         campaign.hs_analytics_first_url === company.campaign.id.toString()
+  //     const googleContacts = GoogleDataByAccount(since, until, company.id).map(
+  //       (company) => {
+  //         const result = contactsbyGoogleCampaign.filter(
+  //           (campaign) =>
+  //             campaign.hs_analytics_first_url === company.campaign.id.toString()
+  //         );
+  //         return result;
+  //       }
   //     );
-  //     return result;
+  //     return googleContacts;
   //   })
-  //   .flat().length;
+  //   .flat()
+  //   .reduce((acc, arr) => acc + arr.length, 0);
 
   // console.log(googleAssignments);
+
+  // console.log(
+  //   GoogleDataByAccount(since, until, '5347167145')
+  //     .map((company) => {
+  //       const result = contactsbyGoogleCampaign.filter(
+  //         (campaign) =>
+  //           campaign.hs_analytics_first_url === company.campaign.id.toString()
+  //       );
+  //       return result;
+  //     })
+  //     .flat().length
+  // );
 
   const totalSpendByCompany = accountInsights.reduce((result, element) => {
     const { account_name, spend } = element;
@@ -179,30 +193,35 @@ export default function GeneralTable() {
     {
       field: 'totalSpend',
       headerName: 'Gastado',
+      type: 'number',
       width: 160,
       renderHeader: () => <div className="header-bold">Gastado</div>,
     },
     {
       field: 'cpc',
       headerName: 'Gastado',
+      type: 'number',
       width: 160,
       renderHeader: () => <div className="header-bold">CPC promedio</div>,
     },
     {
       field: 'leads',
       headerName: 'Leads',
+      type: 'number',
       width: 160,
       renderHeader: () => <div className="header-bold">Leads</div>,
     },
     {
       field: 'cpl',
       headerName: 'CPL',
+      type: 'number',
       width: 160,
       renderHeader: () => <div className="header-bold">CPL</div>,
     },
     {
       field: 'assignments',
       headerName: 'Asignaciones',
+      type: 'number',
       width: 160,
       renderHeader: () => <div className="header-bold">Asignaciones</div>,
     },
@@ -288,6 +307,15 @@ export default function GeneralTable() {
       1000000 /
       GoogleLeadsByAccount(since, until, company.id)
     ).toFixed(2)}`,
+    assignments: GoogleDataByAccount(since, until, company.id)
+      .map((company) => {
+        const result = contactsbyGoogleCampaign.filter(
+          (campaign) =>
+            campaign.hs_analytics_first_url === company.campaign.id.toString()
+        );
+        return result;
+      })
+      .flat().length,
   }));
 
   const totalGoogleLeads = parseInt(
@@ -295,6 +323,22 @@ export default function GeneralTable() {
       .map((company) => GoogleLeadsByAccount(since, until, company.id))
       .reduce((acc, curr) => acc + curr, 0)
   );
+
+  const totalGoogleAssignments = googleAccounts
+    .map((company) => {
+      const googleContacts = GoogleDataByAccount(since, until, company.id).map(
+        (company) => {
+          const result = contactsbyGoogleCampaign.filter(
+            (campaign) =>
+              campaign.hs_analytics_first_url === company.campaign.id.toString()
+          );
+          return result;
+        }
+      );
+      return googleContacts;
+    })
+    .flat()
+    .reduce((acc, arr) => acc + arr.length, 0);
 
   const totalSpendSum = googleAccounts.reduce((sum, company) => {
     const totalSpend = (
@@ -316,6 +360,11 @@ export default function GeneralTable() {
       (grandTotalSpend + totalSpendSum) /
       (huLeads + huLifestyleLeads + gimLeads + totalGoogleLeads)
     ).toFixed(2)}`,
+    assignments:
+      huAssignments +
+      huLifestyleAssignments +
+      gimAssignments +
+      totalGoogleAssignments,
   };
 
   return (

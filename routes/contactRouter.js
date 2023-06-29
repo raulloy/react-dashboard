@@ -19,18 +19,28 @@ contactRouter.get(
 
       for (const contact of contacts) {
         const existingContact = await Contact.findOne({ id: contact.id });
-        if (existingContact) {
-          console.log(
-            `Contact with id ${contact.id} already exists. Skipping...`
-          );
-          continue;
-        }
 
-        const newContact = new Contact(contact);
-        try {
-          await newContact.save();
-        } catch (error) {
-          console.error(`Error saving contact: ${error}`);
+        if (existingContact) {
+          try {
+            await Contact.updateOne({ id: contact.id }, contact);
+            console.log(`Contact with id ${contact.id} updated successfully.`);
+          } catch (error) {
+            console.error(
+              `Error updating contact with id ${contact.id}: ${error}`
+            );
+          }
+        } else {
+          const newContact = new Contact(contact);
+          try {
+            await newContact.save();
+            console.log(
+              `New contact with id ${contact.id} saved successfully.`
+            );
+          } catch (error) {
+            console.error(
+              `Error saving new contact with id ${contact.id}: ${error}`
+            );
+          }
         }
       }
     }
