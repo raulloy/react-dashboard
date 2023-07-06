@@ -186,9 +186,9 @@ export default function GeneralTable() {
     },
     {
       field: 'company',
-      headerName: 'Campaña',
-      width: 300,
-      renderHeader: () => <div className="header-bold">Campaña</div>,
+      headerName: 'Compañia',
+      width: 280,
+      renderHeader: () => <div className="header-bold">Compañia</div>,
     },
     {
       field: 'totalSpend',
