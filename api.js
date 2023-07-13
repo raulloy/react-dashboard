@@ -121,9 +121,14 @@ export const getContacts = async (limit, after) => {
           {
             filters: [
               {
-                propertyName: 'email',
-                operator: 'EQ',
-                value: 'carlos12.hdz00@gmail.com',
+                propertyName: 'hubspot_owner_assigneddate',
+                operator: 'GTE',
+                value: new Date('2023-06-26').getTime(),
+              },
+              {
+                propertyName: 'hubspot_owner_assigneddate',
+                operator: 'LTE',
+                value: new Date('2023-06-30').getTime() + 86400000,
               },
             ],
           },

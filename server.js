@@ -14,12 +14,15 @@ import userRouter from './routes/userRoutes.js';
 import contactRouter from './routes/contactRouter.js';
 
 mongoose
-  .connect(config.MONGODB_URL)
+  .connect(config.MONGODB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log('Connected to mongodb');
   })
   .catch((error) => {
-    console.log(error.reason);
+    console.log(error);
   });
 
 const app = express();
