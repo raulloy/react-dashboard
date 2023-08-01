@@ -9,7 +9,7 @@ export const getAccountInsights = async (
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${accountId}/insights?fields=account_id,account_name,reach,clicks,impressions,spend,cpc,ctr,conversions,frequency,actions&time_range={'since':'${since}','until':'${until}'}&limit=30&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v17.0/${accountId}/insights?fields=account_id,account_name,reach,clicks,impressions,spend,cpc,ctr,conversions,frequency,actions&time_range={'since':'${since}','until':'${until}'}&limit=30&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -30,7 +30,7 @@ export const getCampaignInsights = async (
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${accountId}?fields=name,campaigns.limit(60){name,status,objective,account_id,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v17.0/${accountId}?fields=name,campaigns.limit(60){name,status,objective,account_id,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -38,6 +38,39 @@ export const getCampaignInsights = async (
       },
     });
     return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getCampaignInsightsByMonth = async (
+  accessToken,
+  accountId,
+  year = 2023
+) => {
+  try {
+    const insightsByMonth = [];
+    const months = Array.from({ length: 6 }, (_, index) => index + 1); // Generating an array [1, 2, 3, 4, 5, 6] for the months January to June
+
+    for (const month of months) {
+      const firstDayOfMonth = `${year}-${String(month).padStart(2, '0')}-01`;
+      const lastDayOfMonth = new Date(year, month, 0)
+        .toISOString()
+        .slice(0, 10);
+
+      const response = await axios({
+        url: `https://graph.facebook.com/v17.0/${accountId}/insights?fields=account_id,account_name,reach,clicks,impressions,spend,cpc,ctr,conversions,frequency,cost_per_action_type,actions&time_range={'since':'${firstDayOfMonth}','until':'${lastDayOfMonth}'}&limit=30&access_token=${accessToken}`,
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      insightsByMonth.push(response.data);
+    }
+
+    return insightsByMonth;
   } catch (error) {
     return error;
   }
@@ -51,7 +84,7 @@ export const getAdSetsInsights = async (
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${accountId}?fields=name,objective,adsets.limit(50){name,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v17.0/${accountId}?fields=name,objective,adsets.limit(50){name,status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -72,7 +105,7 @@ export const getAllAdSetsInsights = async (
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${accountID}?fields=name,campaigns.limit(60){name,status,objective,adsets{name,account_id,campaign_id,campaign{name},status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}}&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v17.0/${accountID}?fields=name,campaigns.limit(60){name,status,objective,adsets{name,account_id,campaign_id,campaign{name},status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}}&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -93,7 +126,7 @@ export const getAllAdsInsights = async (
 ) => {
   try {
     const response = await axios({
-      url: `https://graph.facebook.com/v15.0/${accountID}?fields=name,campaigns.limit(60){name,status,objective,adsets.limit(60){name,status,campaign{objective},ads{name,account_id,campaign{objective},adset_id,adset{name},status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}}}&access_token=${accessToken}`,
+      url: `https://graph.facebook.com/v17.0/${accountID}?fields=name,campaigns.limit(60){name,status,objective,adsets.limit(60){name,status,campaign{objective},ads{name,account_id,campaign{objective},adset_id,adset{name},status,insights.time_range({"since":"${since}","until":"${until}"}){reach,clicks,impressions,spend,cpc,ctr,actions}}}}&access_token=${accessToken}`,
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -123,22 +156,22 @@ export const getContacts = async (limit, after) => {
               {
                 propertyName: 'hubspot_owner_assigneddate',
                 operator: 'GTE',
-                value: new Date('2023-01-28').getTime(),
+                value: new Date('2023-07-30').getTime(),
               },
               {
                 propertyName: 'hubspot_owner_assigneddate',
                 operator: 'LTE',
-                value: new Date('2023-01-31').getTime() + 86400000,
+                value: new Date('2023-07-31').getTime() + 86400000,
               },
             ],
           },
         ],
-        sorts: [
-          {
-            propertyName: 'createdate',
-            direction: 'DESCENDING',
-          },
-        ],
+        // sorts: [
+        //   {
+        //     propertyName: 'createdate',
+        //     direction: 'DESCENDING',
+        //   },
+        // ],
         limit: limit,
         after: after,
         properties: [

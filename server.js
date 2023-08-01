@@ -5,6 +5,7 @@ import {
   getAllAdSetsInsights,
   getAllAdsInsights,
   getCampaignInsights,
+  getCampaignInsightsByMonth,
 } from './api.js';
 import path from 'path';
 import Contact from './models/contactModel.js';
@@ -14,10 +15,7 @@ import userRouter from './routes/userRoutes.js';
 import contactRouter from './routes/contactRouter.js';
 
 mongoose
-  .connect(config.MONGODB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(config.MONGODB_URL)
   .then(() => {
     console.log('Connected to mongodb');
   })
@@ -169,6 +167,15 @@ app.get('/api/campaign-insights/:id', async (req, res) => {
     req.params.id,
     since,
     until
+  );
+
+  res.send(CampaignInsightsObj);
+});
+
+app.get('/api/account-insights-by-month/:id', async (req, res) => {
+  const CampaignInsightsObj = await getCampaignInsightsByMonth(
+    accessToken,
+    req.params.id
   );
 
   res.send(CampaignInsightsObj);
